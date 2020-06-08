@@ -2,3 +2,4 @@
 /.idea
 *.lock
 yarn.lock
+/config/config.env
