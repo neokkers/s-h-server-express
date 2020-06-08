@@ -32,6 +32,22 @@ const UserSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  elo: {
+    type: Number,
+    default: 800
+  },
+  won: {
+    type: Number,
+    default: 0
+  },
+  lost: {
+    type: Number,
+    default: 0
+  },
+  mainVillain: {
+    type: Number,
+    default: 0
   }
 });
 

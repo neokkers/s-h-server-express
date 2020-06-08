@@ -14,6 +14,10 @@ export const typeDefs = gql`
     resetPasswordToken: String!
     resetPasswordExpire: String!
     createdAt: String!
+    elo: Int!
+    won: Int!
+    lost: Int!
+    mainVillain: Int!
   }
   type RegisterResponse {
     user: User!
