@@ -1,34 +1,53 @@
 import User from "../models/User";
+import WerewolfProfile from "../models/Werewolf/WerewolfProfile";
+var ObjectId = require("mongoose").Types.ObjectId;
 
 export const resolvers = {
   Query: {
     hello: () => "hello",
-    users: () => User.find()
+    users: () => User.find(),
+    userData: async (_, { id }) => {
+      const user = await User.findById(id);
+      const werewolfProfile = await WerewolfProfile.findOne({
+        userId: new ObjectId(id),
+      });
+
+      return {
+        user,
+        werewolfProfile,
+      };
+    },
   },
   Mutation: {
-    registerUser: async (_, { name, email, password }) => {
+    registerUser: async (_, { username, email, password }) => {
       const user = await User.create({
-        name,
         email,
-        password
+        username,
+        password,
       });
 
       // Create token
       const token = user.getSignedJwtToken();
 
+      // Create game profiles
+      const werewolfProfile = await WerewolfProfile.create({
+        userId: user._id,
+      });
+
       return {
         user,
-        token
+        token,
+        werewolfProfile,
       };
     },
-    login: async (_, { email, password }) => {
+    login: async (_, { username, password }) => {
       // Validate email & password
-      if (!email || !password) {
-        throw new Error("Please provide an email and password");
+      if (!username || !password) {
+        throw new Error("Please provide a username and password");
       }
 
       // Check for user
-      const user = await User.findOne({ email }).select("+password");
+      const user = await User.findOne({ username }).select("+password");
 
       if (!user) throw new Error("Invalid credentials");
 
@@ -41,8 +60,8 @@ export const resolvers = {
 
       return {
         user,
-        token
+        token,
       };
-    }
-  }
+    },
+  },
 };
