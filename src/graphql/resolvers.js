@@ -17,6 +17,7 @@ export const resolvers = {
         werewolfProfile,
       };
     },
+    werewolfProfiles: () => WerewolfProfile.find(),
   },
   Mutation: {
     registerUser: async (_, { username, email, password }) => {
@@ -26,6 +27,8 @@ export const resolvers = {
         password,
       });
 
+      if (!user) throw new Error("Error registerUser user");
+
       // Create token
       const token = user.getSignedJwtToken();
 
@@ -33,6 +36,9 @@ export const resolvers = {
       const werewolfProfile = await WerewolfProfile.create({
         userId: user._id,
       });
+
+      if (!werewolfProfile)
+        throw new Error("Error registerUser werewolfProfile");
 
       return {
         user,
@@ -58,9 +64,17 @@ export const resolvers = {
       // Create token
       const token = user.getSignedJwtToken();
 
+      // Create game profiles
+      const werewolfProfile = await WerewolfProfile.findOne({
+        userId: user._id,
+      });
+
+      if (!werewolfProfile) throw new Error("Error loginUser werewolfProfile");
+
       return {
         user,
         token,
+        werewolfProfile,
       };
     },
   },
