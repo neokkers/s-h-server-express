@@ -5,6 +5,7 @@ export const typeDefs = gql`
     hello: String!
     users: [User!]!
     userData(id: ID!): UserDataQueryRes!
+    werewolfProfiles: [WerewolfProfile!]!
   }
   type UserDataQueryRes {
     user: User!
@@ -22,6 +23,7 @@ export const typeDefs = gql`
     createdAt: String!
   }
   type WerewolfProfile {
+    id: ID!
     userId: ID!
     elo: Int!
     won: Int!
@@ -38,6 +40,6 @@ export const typeDefs = gql`
       email: String!
       password: String!
     ): RegisterResponse!
-    login(email: String!, password: String!): RegisterResponse!
+    login(username: String!, password: String!): RegisterResponse!
   }
 `;

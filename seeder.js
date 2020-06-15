@@ -7,12 +7,13 @@ const mongoose = require("mongoose");
 dotenv.config({ path: "./config/config.env" });
 
 const User = require("./src/models/User");
+const WerewolfProfile = require("./src/models/Werewolf/WerewolfProfile");
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
 
 const deleteUsers = async () => {
@@ -20,7 +21,6 @@ const deleteUsers = async () => {
     await User.deleteMany();
 
     console.log("Users destroyed...".red.inverse);
-    process.exit();
   } catch (error) {
     console.log(error);
   }
@@ -35,9 +35,29 @@ const createUsers = async () => {
     console.log(error);
   }
 };
+const deleteWerewolfProfiles = async () => {
+  try {
+    await WerewolfProfile.deleteMany();
 
-if (process.argv[2] === "-du") {
-  deleteUsers();
+    console.log("WerewolfProfile destroyed...".red.inverse);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const deleteAll = async () => {
+  try {
+    await deleteUsers();
+    await deleteWerewolfProfiles;
+
+    console.log("WerewolfProfile destroyed...".red.inverse);
+    process.exit();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+if (process.argv[2] === "-da") {
+  deleteAll();
 }
 if (process.argv[2] === "-cu") {
   createUsers();
